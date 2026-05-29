@@ -20,10 +20,6 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
-env:
-  NODE_ENV: production
-  STATIC_EXPORT: "1"
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -46,8 +42,10 @@ jobs:
 
       - name: Build static export
         # base_path from configure-pages is e.g. "/shiplog" for project pages.
+        # NODE_ENV is set here (not job-wide) so pnpm still installs devDeps.
         run: pnpm build:static
         env:
+          NODE_ENV: production
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
       - name: Disable Jekyll processing
